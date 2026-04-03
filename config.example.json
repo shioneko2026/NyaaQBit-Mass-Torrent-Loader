@@ -1,0 +1,19 @@
+{
+  "connection": {
+    "host": "localhost",
+    "port": 8080,
+    "username": "admin",
+    "password": "adminadmin"
+  },
+  "presets": {},
+  "options": {
+    "delay": 1.0,
+    "paused_mode": false,
+    "batch_size": 5
+  },
+  "last_used": {
+    "preset": "",
+    "browse_dir": "",
+    "rss_category": ""
+  }
+}

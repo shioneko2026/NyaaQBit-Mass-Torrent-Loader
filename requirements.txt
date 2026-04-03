@@ -1,0 +1,4 @@
+qbittorrent-api
+tkinterdnd2
+feedparser
+requests

@@ -1,0 +1,14 @@
+# User config — contains credentials, never commit
+config.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# PyInstaller build output
+build/
+dist/
+
+# Claude Code local settings
+.claude/
