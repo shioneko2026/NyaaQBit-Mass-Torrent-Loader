@@ -4,13 +4,16 @@ A Windows GUI application that bulk-loads .torrent files into qBittorrent via th
 
 ## Screenshots
 
-**File Loader tab** — bulk-select torrents, assign category/path, control pacing
-
-![File Loader tab](assets/screenshot-file-loader.jpg)
-
-**RSS Feed tab** — fetch a nyaa.si feed, pick episodes, auto-name the folder
-
-![RSS Feed tab](assets/screenshot-rss-feed.jpg)
+<table>
+  <tr>
+    <td><img src="assets/screenshot-file-loader.jpg" alt="File Loader tab"/></td>
+    <td><img src="assets/screenshot-rss-feed.jpg" alt="RSS Feed tab"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>File Loader tab</b> — bulk-select torrents, assign category/path</td>
+    <td align="center"><b>RSS Feed tab</b> — fetch a nyaa.si feed, pick episodes</td>
+  </tr>
+</table>
 
 ## Limitations
 
