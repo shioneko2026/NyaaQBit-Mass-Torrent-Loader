@@ -39,6 +39,7 @@ class MassTorrentLoader:
 
         self.config = cfg.load_config()
         self.selected_files = []
+        self.original_files = []
         self.qbit = None
         self.category_paths = {}  # {name: save_path} from qBit
         self.cancel_event = threading.Event()
@@ -127,6 +128,15 @@ class MassTorrentLoader:
         btn_row = ttk.Frame(src_frame)
         btn_row.pack(fill=tk.X, pady=(0, 4))
         ttk.Button(btn_row, text="Browse Files...", command=self._browse_files).pack(side=tk.LEFT)
+        ttk.Button(btn_row, text="Remove Selected", command=self._remove_selected_files).pack(side=tk.LEFT, padx=(4, 0))
+        ttk.Button(btn_row, text="Remove All", command=self._remove_all_files).pack(side=tk.LEFT, padx=(4, 0))
+        ttk.Label(btn_row, text="Sort:").pack(side=tk.LEFT, padx=(12, 2))
+        self.sort_var = tk.StringVar(value="Original Sequence")
+        sort_combo = ttk.Combobox(btn_row, textvariable=self.sort_var,
+                                   values=["Original Sequence", "Alphabetically"],
+                                   state="readonly", width=16)
+        sort_combo.pack(side=tk.LEFT)
+        sort_combo.bind("<<ComboboxSelected>>", self._on_sort_changed)
         self.file_count_label = ttk.Label(btn_row, text="No files selected")
         self.file_count_label.pack(side=tk.LEFT, padx=12)
 
@@ -141,7 +151,7 @@ class MassTorrentLoader:
         if HAS_DND:
             self.file_listbox.drop_target_register(DND_FILES)
             self.file_listbox.dnd_bind("<<Drop>>", self._on_drop)
-            self.file_count_label.configure(text="No files selected — browse or drag && drop")
+            self.file_count_label.configure(text="No files selected \u2014 browse or drag && drop")
 
         # Destination
         dest_frame = ttk.LabelFrame(tab, text="Destination", padding=8)
@@ -399,11 +409,43 @@ class MassTorrentLoader:
     # ═══════════════════════════════════════════════════════════════
 
     def _set_files(self, file_list):
-        self.selected_files = file_list
+        self.selected_files = list(file_list)
+        self.original_files = list(file_list)
+        self.sort_var.set("Original Sequence")
+        self._refresh_file_listbox()
+
+    def _refresh_file_listbox(self):
         self.file_listbox.delete(0, tk.END)
         for f in self.selected_files:
             self.file_listbox.insert(tk.END, os.path.basename(f))
-        self.file_count_label.configure(text=f"{len(self.selected_files)} file(s) selected")
+        count = len(self.selected_files)
+        if count == 0:
+            text = "No files selected — browse or drag && drop" if HAS_DND else "No files selected"
+        else:
+            text = f"{count} file(s) selected"
+        self.file_count_label.configure(text=text)
+
+    def _remove_selected_files(self):
+        indices = list(self.file_listbox.curselection())
+        if not indices:
+            return
+        for i in reversed(indices):
+            del self.selected_files[i]
+        self._refresh_file_listbox()
+
+    def _remove_all_files(self):
+        self.selected_files = []
+        self.original_files = []
+        self._refresh_file_listbox()
+
+    def _on_sort_changed(self, event=None):
+        if self.sort_var.get() == "Alphabetically":
+            self.selected_files = sorted(self.selected_files, key=lambda f: os.path.basename(f).lower())
+        else:
+            # Restore original order, keeping only files still in the current list
+            remaining = set(self.selected_files)
+            self.selected_files = [f for f in self.original_files if f in remaining]
+        self._refresh_file_listbox()
 
     def _browse_files(self):
         initial_dir = self.config.get("last_used", {}).get("browse_dir", "")
