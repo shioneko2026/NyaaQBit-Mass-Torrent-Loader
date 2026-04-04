@@ -2,6 +2,16 @@
 
 A Windows GUI application that bulk-loads .torrent files into qBittorrent via the Web API, with controlled pacing to prevent the "moving" status issue that occurs when adding many torrents at once.
 
+## Screenshots
+
+**File Loader tab** — bulk-select torrents, assign category/path, control pacing
+
+![File Loader tab](assets/screenshot-file-loader.jpg)
+
+**RSS Feed tab** — fetch a nyaa.si feed, pick episodes, auto-name the folder
+
+![RSS Feed tab](assets/screenshot-rss-feed.jpg)
+
 ## Limitations
 
 - **qBittorrent only** — uses the qBittorrent Web API directly. Deluge, Transmission, and other clients are not supported.
