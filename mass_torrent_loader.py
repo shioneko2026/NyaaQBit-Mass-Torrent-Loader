@@ -163,6 +163,7 @@ class MassTorrentLoader:
         self.category_var = tk.StringVar()
         self.category_combo = ttk.Combobox(cat_row, textvariable=self.category_var, width=30)
         self.category_combo.pack(side=tk.LEFT, padx=(4, 4))
+        self.category_combo.bind("<<ComboboxSelected>>", self._on_fl_category_selected)
         ttk.Button(cat_row, text="Refresh", command=self._refresh_categories).pack(side=tk.LEFT)
 
         path_row = ttk.Frame(dest_frame)
@@ -452,6 +453,13 @@ class MassTorrentLoader:
         if last in names:
             self.preset_var.set(last)
             self._apply_preset(last)
+
+    def _on_fl_category_selected(self, event=None):
+        cat = self.category_var.get()
+        path = self.category_paths.get(cat, "")
+        if path:
+            self.savepath_var.set(path)
+        self.preset_var.set("")
 
     def _on_preset_selected(self, event=None):
         name = self.preset_var.get()
